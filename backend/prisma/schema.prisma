@@ -1,0 +1,314 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  firstName     String?
+  lastName      String?
+  phone         String?
+  avatar        String?
+  dateOfBirth   DateTime?
+  
+  // 职业偏好
+  desiredPosition String?
+  desiredLocation String?
+  salaryMin       Int?
+  salaryMax       Int?
+  workType        WorkType  @default(FULL_TIME)
+  remoteType      RemoteType @default(OFFICE)
+  
+  // 通知设置
+  emailNotifications     Boolean @default(true)
+  jobMatchNotifications  Boolean @default(true)
+  statusUpdateNotifications Boolean @default(true)
+  interviewReminders     Boolean @default(true)
+  marketingEmails        Boolean @default(false)
+  
+  // 隐私设置
+  resumeVisibility ResumeVisibility @default(PRIVATE)
+  
+  // 时间戳
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  lastLoginAt   DateTime?
+  
+  // 关联关系
+  resumes       Resume[]
+  applications  Application[]
+  jobs          Job[]
+  aiAnalyses    AiAnalysis[]
+  refreshTokens RefreshToken[]
+  
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("refresh_tokens")
+}
+
+model Resume {
+  id          String   @id @default(cuid())
+  userId      String
+  title       String
+  fileName    String
+  filePath    String
+  fileSize    Int
+  fileType    String
+  
+  // 解析后的内容
+  content     String?
+  skills      String[]
+  experience  Json?
+  education   Json?
+  
+  // 元数据
+  isDefault   Boolean  @default(false)
+  isAnalyzed  Boolean  @default(false)
+  
+  // 时间戳
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // 关联关系
+  user         User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applications Application[]
+  aiAnalyses   AiAnalysis[]
+  
+  @@map("resumes")
+}
+
+model Job {
+  id          String     @id @default(cuid())
+  userId      String
+  title       String
+  company     String
+  location    String
+  salaryMin   Int?
+  salaryMax   Int?
+  currency    String     @default("CNY")
+  
+  // 职位详情
+  description String?
+  requirements String?
+  benefits    String?
+  jobType     WorkType   @default(FULL_TIME)
+  remoteType  RemoteType @default(OFFICE)
+  
+  // 来源信息
+  source      String?    // 职位来源网站
+  sourceUrl   String?    // 原始链接
+  
+  // 状态管理
+  status      JobStatus  @default(SAVED)
+  priority    Priority   @default(MEDIUM)
+  isFavorite  Boolean    @default(false)
+  
+  // AI分析
+  aiScore     Float?     // AI匹配分数
+  aiAnalysis  Json?      // AI分析结果
+  
+  // 时间戳
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  
+  // 关联关系
+  user         User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  applications Application[]
+  
+  @@map("jobs")
+}
+
+model Application {
+  id          String            @id @default(cuid())
+  userId      String
+  jobId       String
+  resumeId    String
+  
+  // 申请信息
+  status      ApplicationStatus @default(APPLIED)
+  appliedAt   DateTime          @default(now())
+  
+  // 跟进信息
+  nextFollowUp DateTime?
+  notes       String?
+  
+  // 面试信息
+  interviews  Interview[]
+  
+  // 时间戳
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // 关联关系
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  job    Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  resume Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  
+  // 时间线
+  timeline ApplicationTimeline[]
+  
+  @@unique([userId, jobId])
+  @@map("applications")
+}
+
+model ApplicationTimeline {
+  id            String            @id @default(cuid())
+  applicationId String
+  status        ApplicationStatus
+  notes         String?
+  createdAt     DateTime          @default(now())
+  
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  
+  @@map("application_timeline")
+}
+
+model Interview {
+  id            String        @id @default(cuid())
+  applicationId String
+  type          InterviewType @default(PHONE)
+  scheduledAt   DateTime
+  duration      Int?          // 面试时长(分钟)
+  location      String?       // 面试地点或链接
+  interviewer   String?       // 面试官
+  notes         String?       // 面试笔记
+  feedback      String?       // 面试反馈
+  status        InterviewStatus @default(SCHEDULED)
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  
+  @@map("interviews")
+}
+
+model AiAnalysis {
+  id        String        @id @default(cuid())
+  userId    String
+  resumeId  String?
+  jobId     String?
+  type      AnalysisType
+  
+  // 分析结果
+  score     Float?
+  analysis  Json          // 详细分析结果
+  
+  // 元数据
+  model     String        // 使用的AI模型
+  tokens    Int?          // 消耗的token数
+  cost      Float?        // 分析成本
+  
+  // 时间戳
+  createdAt DateTime @default(now())
+  
+  // 关联关系
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resume Resume? @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  
+  @@map("ai_analyses")
+}
+
+model Skill {
+  id          String @id @default(cuid())
+  name        String @unique
+  category    String
+  description String?
+  
+  createdAt DateTime @default(now())
+  
+  @@map("skills")
+}
+
+// 枚举类型
+enum WorkType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERNSHIP
+  FREELANCE
+}
+
+enum RemoteType {
+  OFFICE
+  REMOTE
+  HYBRID
+}
+
+enum JobStatus {
+  SAVED
+  APPLIED
+  INTERVIEWING
+  OFFER_RECEIVED
+  REJECTED
+  WITHDRAWN
+}
+
+enum ApplicationStatus {
+  APPLIED
+  SCREENING
+  PHONE_INTERVIEW
+  TECHNICAL_INTERVIEW
+  ONSITE_INTERVIEW
+  FINAL_INTERVIEW
+  OFFER_RECEIVED
+  OFFER_ACCEPTED
+  OFFER_DECLINED
+  REJECTED
+  WITHDRAWN
+}
+
+enum InterviewType {
+  PHONE
+  VIDEO
+  ONSITE
+  TECHNICAL
+  BEHAVIORAL
+  PANEL
+}
+
+enum InterviewStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum ResumeVisibility {
+  PRIVATE
+  PUBLIC
+  CONTACTS_ONLY
+}
+
+enum AnalysisType {
+  RESUME_ANALYSIS
+  JOB_MATCHING
+  RESUME_SCORING
+  SKILL_ANALYSIS
+}
