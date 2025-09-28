@@ -1,103 +1,291 @@
-# 前端设计规范
+# 前端设计规范 (基于实际实现)
 
 ## 🎨 设计系统
 
-### 色彩规范
+### 实际使用的色彩规范 (TailwindCSS)
 
-#### 主色调
+#### 主色调 (实际应用)
 ```css
+/* 根据实际代码中使用的颜色 */
 :root {
-  /* 主品牌色 */
-  --primary-50: #e3f2fd;
-  --primary-100: #bbdefb;
-  --primary-200: #90caf9;
-  --primary-300: #64b5f6;
-  --primary-400: #42a5f5;
-  --primary-500: #2196f3;  /* 主色 */
-  --primary-600: #1e88e5;
-  --primary-700: #1976d2;
-  --primary-800: #1565c0;
-  --primary-900: #0d47a1;
+  /* 主品牌色 - Indigo系列 */
+  --primary-50: #eef2ff;
+  --primary-100: #e0e7ff;
+  --primary-200: #c7d2fe;
+  --primary-300: #a5b4fc;
+  --primary-400: #818cf8;
+  --primary-500: #6366f1;  /* 主色 - indigo-500 */
+  --primary-600: #4f46e5;
+  --primary-700: #4338ca;
+  --primary-800: #3730a3;
+  --primary-900: #312e81;
   
-  /* 辅助色 */
-  --secondary-50: #f3e5f5;
-  --secondary-100: #e1bee7;
-  --secondary-200: #ce93d8;
-  --secondary-300: #ba68c8;
-  --secondary-400: #ab47bc;
-  --secondary-500: #9c27b0;  /* 辅助色 */
-  --secondary-600: #8e24aa;
-  --secondary-700: #7b1fa2;
-  --secondary-800: #6a1b9a;
-  --secondary-900: #4a148c;
+  /* 成功状态 - Green系列 */
+  --success-50: #f0fdf4;
+  --success-100: #dcfce7;
+  --success-500: #22c55e;  /* green-500 */
+  --success-600: #16a34a;
+  --success-700: #15803d;
   
-  /* 成功色 */
-  --success-50: #e8f5e8;
-  --success-100: #c8e6c9;
-  --success-500: #4caf50;
-  --success-600: #43a047;
-  --success-700: #388e3c;
+  /* 警告状态 - Yellow/Orange系列 */
+  --warning-50: #fefce8;
+  --warning-100: #fef3c7;
+  --warning-500: #eab308;  /* yellow-500 */
+  --warning-600: #ca8a04;
+  --warning-700: #a16207;
   
-  /* 警告色 */
-  --warning-50: #fff8e1;
-  --warning-100: #ffecb3;
-  --warning-500: #ff9800;
-  --warning-600: #fb8c00;
-  --warning-700: #f57c00;
+  /* 错误状态 - Red系列 */
+  --error-50: #fef2f2;
+  --error-100: #fee2e2;
+  --error-500: #ef4444;    /* red-500 */
+  --error-600: #dc2626;
+  --error-700: #b91c1c;
   
-  /* 错误色 */
-  --error-50: #ffebee;
-  --error-100: #ffcdd2;
-  --error-500: #f44336;
-  --error-600: #e53935;
-  --error-700: #d32f2f;
-  
-  /* 中性色 */
-  --gray-50: #fafafa;
-  --gray-100: #f5f5f5;
-  --gray-200: #eeeeee;
-  --gray-300: #e0e0e0;
-  --gray-400: #bdbdbd;
-  --gray-500: #9e9e9e;
-  --gray-600: #757575;
-  --gray-700: #616161;
-  --gray-800: #424242;
-  --gray-900: #212121;
-  
-  /* 文本色 */
-  --text-primary: #212121;
-  --text-secondary: #757575;
-  --text-disabled: #bdbdbd;
-  --text-inverse: #ffffff;
+  /* 中性色 - Gray系列 */
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
 }
 ```
 
-#### 语义化颜色
+#### 看板状态色彩 (已实现)
 ```css
+/* 根据实际JobApplicationKanban和KanbanBoard组件 */
 :root {
-  /* 状态颜色 */
-  --status-saved: var(--gray-500);
-  --status-applied: var(--primary-500);
-  --status-interview: var(--warning-500);
-  --status-offer: var(--success-500);
-  --status-rejected: var(--error-500);
+  /* 职位申请状态色彩 */
+  --status-interested: var(--gray-500);    /* 感兴趣 - 灰色 */
+  --status-applied: var(--primary-500);    /* 已投递 - 蓝色 */
+  --status-interview: var(--warning-500);  /* 面试中 - 黄色 */
+  --status-finished: var(--gray-600);      /* 已结束 - 深灰色 */
   
-  /* 优先级颜色 */
-  --priority-low: var(--gray-400);
-  --priority-medium: var(--warning-400);
-  --priority-high: var(--error-400);
+  /* 结果状态色彩 */
+  --result-offer: var(--success-500);      /* 获得Offer - 绿色 */
+  --result-rejected: var(--error-500);     /* 被拒绝 - 红色 */
   
-  /* 分数颜色 */
-  --score-excellent: var(--success-500);  /* 90-100 */
-  --score-good: var(--primary-500);       /* 70-89 */
-  --score-average: var(--warning-500);    /* 50-69 */
-  --score-poor: var(--error-500);         /* <50 */
+  /* 任务优先级色彩 */
+  --priority-low: var(--gray-400);         /* 低优先级 */
+  --priority-medium: var(--warning-500);   /* 中优先级 */
+  --priority-high: var(--error-500);       /* 高优先级 */
+  --priority-urgent: var(--error-600);     /* 紧急 */
 }
 ```
 
-### 字体规范
+### 布局系统 (已实现)
 
-#### 字体族
+#### 响应式网格布局
+基于TailwindCSS的现代响应式设计：
+
+```css
+/* 主要布局容器 - 在所有页面中使用 */
+.container-layout {
+  max-width: 1280px;    /* max-w-7xl */
+  margin: 0 auto;       /* mx-auto */
+  padding: 0 1rem;      /* px-4 */
+}
+
+@media (min-width: 640px) {
+  .container-layout {
+    padding: 0 1.5rem;  /* sm:px-6 */
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-layout {
+    padding: 0 2rem;    /* lg:px-8 */
+  }
+}
+```
+
+#### 看板网格系统
+```css
+/* 职位申请看板 - 4列等宽布局 */
+.kanban-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;          /* gap-6 */
+}
+
+/* 任务管理看板 - 5列等宽布局 */
+.kanban-grid-5 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5rem;          /* gap-6 */
+}
+
+/* 移动端自适应 */
+@media (max-width: 768px) {
+  .kanban-grid-4,
+  .kanban-grid-5 {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+```
+
+## 🎯 已实现组件库
+
+### 认证组件
+
+#### AuthProvider (核心认证上下文)
+```tsx
+// 实际实现的认证上下文
+interface AuthContextType {
+  user: User | null;
+  login: (credentials: LoginCredentials) => Promise<void>;
+  register: (userData: RegisterData) => Promise<void>;
+  logout: () => void;
+  isLoading: boolean;
+}
+
+// 特性：
+// - localStorage持久化
+// - 自动状态恢复
+// - 完整的错误处理
+// - TypeScript类型安全
+```
+
+#### ProtectedRoute (路由保护)
+```tsx
+// 实际实现的路由保护组件
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+  const { user, isLoading } = useAuth();
+  
+  if (isLoading) return <LoadingSpinner />;
+  
+  return user ? children : <Navigate to="/login" replace />;
+};
+
+// 特性：
+// - 自动重定向未认证用户
+// - 加载状态处理
+// - 无缝用户体验
+```
+
+### 看板组件
+
+#### JobApplicationKanban (职位申请看板)
+```tsx
+// 4阶段职位申请管理
+interface JobApplication {
+  id: string;
+  company: string;
+  position: string;
+  status: 'interested' | 'applied' | 'interview' | 'finished';
+  result?: 'offer' | 'rejected';
+  appliedAt: string;
+  notes?: string;
+}
+
+// 特性：
+// - HTML5拖拽API
+// - 结果状态标记
+// - 响应式grid布局
+// - 实时状态更新
+```
+
+#### KanbanBoard (任务管理看板)
+```tsx
+// 5阶段任务管理
+interface Task {
+  id: string;
+  title: string;
+  description: string;
+  status: 'todo' | 'in-progress' | 'review' | 'done' | 'archived';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  assignee: string;
+  tags: string[];
+  dueDate: string;
+}
+
+// 特性：
+// - 拖拽排序
+// - 优先级颜色编码
+// - 标签系统
+// - 团队协作功能
+```
+
+### 文件上传组件
+
+#### 多方式文件上传系统
+```tsx
+// ResumePage和DashboardPage中实现
+const FileUploadFeatures = {
+  // 1. 点击上传
+  clickUpload: {
+    implementation: "label + htmlFor方式",
+    reliability: "高",
+    browser_support: "全部现代浏览器"
+  },
+  
+  // 2. 拖拽上传
+  dragUpload: {
+    implementation: "HTML5 Drag & Drop API",
+    visual_feedback: "拖拽区域高亮",
+    file_validation: "类型和大小验证"
+  },
+  
+  // 3. 按钮上传
+  buttonUpload: {
+    implementation: "备用上传方式",
+    fallback: "主要上传失败时的备选方案"
+  }
+};
+
+// 支持格式：PDF, DOC, DOCX
+// 实时进度反馈
+// 错误处理和用户提示
+```
+
+### 导航组件
+
+#### 顶部导航栏
+```tsx
+// App.tsx中实现的统一导航
+const Navigation = {
+  layout: "固定顶部导航",
+  responsive: true,
+  features: {
+    logo: "职位管理平台",
+    navigation: [
+      "🏠 仪表板",
+      "📄 简历管理", 
+      "📋 看板管理",
+      "📎 上传测试"
+    ],
+    user_menu: {
+      welcome_message: "欢迎，{username}",
+      logout_button: "退出登录"
+    }
+  }
+};
+```
+
+## 🎨 设计特色 (已实现)
+
+### 视觉设计
+- **现代扁平化设计**：简洁的卡片式布局
+- **一致的间距系统**：基于TailwindCSS的spacing scale
+- **优雅的阴影效果**：shadow-md和shadow-lg的层次感
+- **圆角设计语言**：统一的rounded-lg圆角
+
+### 交互设计
+- **拖拽反馈**：拖拽时的视觉高亮效果
+- **状态指示**：清晰的hover和active状态
+- **加载状态**：优雅的loading和过渡动画
+- **错误提示**：友好的错误信息显示
+
+### 响应式特性
+- **移动优先**：适配手机和平板设备
+- **断点系统**：sm/md/lg/xl响应式断点
+- **网格自适应**：看板列数根据屏幕宽度调整
+- **触控友好**：足够的点击区域和手势支持
 ```css
 :root {
   /* 主字体 */

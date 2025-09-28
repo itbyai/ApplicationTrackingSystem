@@ -1,56 +1,247 @@
-# 用户界面设计
+# 用户界面设计 (基于实际实现)
 
 ## 🎨 整体设计理念
 
+基于现代Material Design和简洁主义的设计原则，创造出既专业又用户友好的求职管理界面。
+
 ### 设计原则
-- **用户为中心**: 简化求职流程，减少用户认知负担
-- **数据驱动**: 通过可视化展示帮助用户做出明智决策
-- **智能辅助**: AI分析结果以清晰直观的方式呈现
-- **响应式设计**: 适配桌面、平板和移动设备
-- **可访问性**: 支持屏幕阅读器，遵循WCAG 2.1标准
+- **简洁明了**：去除冗余元素，突出核心功能
+- **一致性**：统一的视觉语言和交互模式
+- **可访问性**：符合WCAG标准的无障碍设计
+- **响应式**：适配所有设备和屏幕尺寸
 
-### 视觉风格
-- **现代简约**: 干净的界面，充足的留白
-- **专业可信**: 商务感的配色和字体选择  
-- **友好温暖**: 适度的色彩和圆角设计
-- **层次清晰**: 明确的信息架构和视觉层级
+## 🏠 页面结构设计 (已实现)
 
-## 🏠 页面结构设计
+### 1. 认证页面 (LoginPage & RegisterPage)
 
-### 1. 登录/注册页面
+#### 实际实现特性
+- **简洁表单设计**：居中布局，清晰的输入字段
+- **品牌标识**：顶部品牌名称展示
+- **表单验证**：前端实时验证和错误提示
+- **响应式布局**：移动端友好的表单布局
+- **路由导航**：登录和注册页面间的无缝切换
 
-#### 页面布局
-```
-┌─────────────────────────────────────────┐
-│                Logo                     │
-│                                         │
-│  ┌─────────────────────────────────┐   │
-│  │         登录表单                  │   │
-│  │  ┌─────────────────────────────┐ │   │
-│  │  │ 邮箱地址                     │ │   │
-│  │  └─────────────────────────────┘ │   │
-│  │  ┌─────────────────────────────┐ │   │
-│  │  │ 密码                        │ │   │
-│  │  └─────────────────────────────┘ │   │
-│  │  [ ] 记住我      忘记密码?       │   │
-│  │  ┌─────────────────────────────┐ │   │
-│  │  │       登录                  │ │   │
-│  │  └─────────────────────────────┘ │   │
-│  │                                 │   │
-│  │  ──────── 或 ────────           │   │
-│  │                                 │   │
-│  │  [ Google登录 ] [ GitHub登录 ]  │   │
-│  │                                 │   │
-│  │  还没有账户? 立即注册           │   │
-│  └─────────────────────────────────┘   │
-└─────────────────────────────────────────┘
+```tsx
+// 实际布局结构
+<div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div className="sm:mx-auto sm:w-full sm:max-w-md">
+    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+      登录到您的账户
+    </h2>
+  </div>
+  <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+      {/* 表单内容 */}
+    </div>
+  </div>
+</div>
 ```
 
-#### 关键特性
-- **双栏布局**: 左侧品牌展示，右侧登录表单
-- **社交登录**: 支持Google、LinkedIn等第三方登录
-- **表单验证**: 实时验证和友好的错误提示
-- **响应式**: 移动端简化为单栏布局
+### 2. 仪表盘页面 (DashboardPage)
+
+#### 实际实现的功能模块
+```tsx
+// 统计卡片布局 (已实现)
+<div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+  {/* 简历数量统计 */}
+  <StatCard title="简历版本" count="3" icon="📄" color="blue" />
+  
+  {/* 职位申请统计 */}
+  <StatCard title="职位申请" count="12" icon="💼" color="green" />
+  
+  {/* 面试邀请统计 */}
+  <StatCard title="面试邀请" count="5" icon="📞" color="yellow" />
+  
+  {/* AI分析统计 */}
+  <StatCard title="AI分析" count="8" icon="🤖" color="purple" />
+</div>
+```
+
+#### 文件上传功能 (已实现)
+- **多方式上传**：点击、拖拽、按钮三种上传方式
+- **实时反馈**：上传进度和状态显示
+- **格式验证**：支持PDF、DOC、DOCX格式
+- **拖拽区域**：视觉化的拖拽上传区域
+
+### 3. 简历管理页面 (ResumePage)
+
+#### 实际实现特性
+```tsx
+// 文件上传区域布局
+<div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
+  <div className="text-center">
+    <div className="mx-auto h-12 w-12 text-gray-400">
+      <svg>📄</svg>
+    </div>
+    <div className="mt-4">
+      <label htmlFor="file-upload" className="cursor-pointer">
+        <span className="mt-2 block text-sm font-medium text-gray-900">
+          点击上传简历或拖拽文件到此处
+        </span>
+      </label>
+      <input id="file-upload" name="file-upload" type="file" className="sr-only" />
+    </div>
+    <p className="mt-1 text-sm text-gray-500">
+      PNG, JPG, PDF 格式，最大 10MB
+    </p>
+  </div>
+</div>
+```
+
+### 4. 看板管理页面 (KanbanPage)
+
+#### 双看板系统 (已实现)
+- **选项卡切换**：职位申请看板 vs 任务管理看板
+- **统一布局**：相同的视觉设计语言
+
+```tsx
+// 选项卡导航 (已实现)
+<div className="border-b border-gray-200">
+  <nav className="-mb-px flex space-x-8">
+    <button className={`${activeTab === 'jobs' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500'} whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm`}>
+      职位申请看板
+    </button>
+    <button className={`${activeTab === 'tasks' ? 'border-indigo-500 text-indigo-600' : 'border-transparent text-gray-500'} whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm`}>
+      任务管理看板
+    </button>
+  </nav>
+</div>
+```
+
+#### 职位申请看板 (4列布局)
+```tsx
+// 实际的4阶段布局
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+  <Column title="👀 感兴趣" color="gray" />
+  <Column title="📤 已投递" color="blue" />
+  <Column title="💬 面试中" color="yellow" />
+  <Column title="🏁 已结束" color="gray" />
+</div>
+```
+
+#### 任务管理看板 (5列布局)  
+```tsx
+// 实际的5阶段布局
+<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+  <Column title="📋 待办" color="gray" />
+  <Column title="⚡ 进行中" color="blue" />
+  <Column title="🔍 审核中" color="yellow" />
+  <Column title="✅ 完成" color="green" />
+  <Column title="📦 已归档" color="gray" />
+</div>
+```
+
+### 5. 拖拽交互设计 (已实现)
+
+#### HTML5 Drag & Drop实现
+```tsx
+// 拖拽处理逻辑
+const handleDragStart = (e: DragEvent, item: any) => {
+  e.dataTransfer?.setData('text/plain', JSON.stringify(item));
+  setDraggedItem(item);
+};
+
+const handleDrop = (e: DragEvent, targetStatus: string) => {
+  e.preventDefault();
+  const item = JSON.parse(e.dataTransfer?.getData('text/plain') || '{}');
+  updateItemStatus(item.id, targetStatus);
+  setDraggedItem(null);
+};
+```
+
+#### 视觉反馈
+- **拖拽高亮**：拖拽时卡片半透明效果
+- **放置区域指示**：目标列高亮边框
+- **平滑过渡**：CSS transition动画效果
+
+## 📱 移动端适配 (已实现)
+
+### 响应式断点
+```css
+/* 移动端 (< 768px) */
+.kanban-mobile {
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+/* 平板端 (768px - 1024px) */
+.kanban-tablet {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* 桌面端 (> 1024px) */
+.kanban-desktop {
+  grid-template-columns: repeat(4, 1fr); /* 或 repeat(5, 1fr) */
+}
+```
+
+### 触控优化
+- **点击区域**：最小44px触控目标
+- **滑动手势**：移动端的左右滑动导航
+- **触控反馈**：触摸时的视觉反馈效果
+
+## 🎨 UI组件规范 (已实现)
+
+### 卡片组件
+```tsx
+// 统一的卡片设计
+<div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 p-4 border border-gray-200">
+  {/* 卡片内容 */}
+</div>
+```
+
+### 按钮系统
+```tsx
+// 主要按钮样式
+<button className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition-colors duration-200">
+  主要操作
+</button>
+
+// 次要按钮样式  
+<button className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-md transition-colors duration-200">
+  次要操作
+</button>
+```
+
+### 状态指示器
+```tsx
+// 结果状态徽章
+<span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+  result === 'offer' 
+    ? 'bg-green-100 text-green-800' 
+    : 'bg-red-100 text-red-800'
+}`}>
+  {result === 'offer' ? '🎉 获得Offer' : '❌ 被拒绝'}
+</span>
+```
+
+## 🔄 交互动效 (已实现)
+
+### CSS过渡效果
+- **悬停效果**：`hover:shadow-lg transition-shadow`
+- **颜色变化**：`hover:bg-blue-700 transition-colors`
+- **拖拽动画**：拖拽时的平滑移动效果
+
+### 加载状态
+- **上传进度**：文件上传时的实时进度条
+- **状态更新**：看板卡片移动时的动画效果
+
+## ♿ 可访问性设计 (已考虑)
+
+### 键盘导航
+- **Tab索引**：逻辑的键盘导航顺序
+- **焦点指示**：清晰的焦点可见性
+- **快捷键**：主要功能的键盘快捷键
+
+### 语义化HTML
+- **标题层级**：正确的h1-h6标题结构
+- **表单标签**：所有输入字段的关联标签
+- **ARIA标签**：屏幕阅读器友好的标记
+
+### 颜色对比
+- **文本对比度**：符合WCAG AA标准
+- **状态区分**：不仅依赖颜色区分状态
+- **高对比模式**：支持系统高对比度设置
 
 ### 2. 仪表盘页面
 
